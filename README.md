@@ -52,7 +52,7 @@ PaymentService is a Laravel-based application that provides a comprehensive API 
 
 - **Create a new gateway**
   - `POST /api/gateways`
-  - Request Body: `{ "gateway": "Stripe", "api_key": "sk_test_4eC39HqLyjWDarjtT1zdp7dc", "secret_key": "whsec_xxx", "other_configuration": "..." }`
+  - Request Body: `{ "gateway": "Stripe", "api_key": "...", "secret_key": "...", "other_configuration": "..." }`
 
 - **Update an existing gateway**
   - `PUT /api/gateways/{id}`
@@ -150,8 +150,8 @@ curl -X POST http://localhost:8000/api/gateways \
 -H "Content-Type: application/json" \
 -d '{
   "gateway": "Stripe",
-  "api_key": "sk_test_4eC39HqLyjWDarjtT1zdp7dc",
-  "secret_key": "whsec_xxx",
+  "api_key": "...",
+  "secret_key": "...",
   "other_configuration": "..."
 }'
 ```
