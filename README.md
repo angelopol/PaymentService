@@ -1,66 +1,163 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# PaymentService
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+PaymentService is a Laravel-based application that provides a comprehensive API for managing payments, refunds, and payment gateways. This document outlines the API structure, model structure, and provides examples of API requests.
 
-## About Laravel
+## API Structure
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Payment Routes
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Create a new payment**
+  - `POST /api/payments`
+  - Request Body: `{ "email": "user@example.com", "amount": 100.00, "currency": "USD", "status": "pending", "gateway": "Stripe", "transaction_id": "txn_12345" }`
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **Update an existing payment**
+  - `PUT /api/payments/{id}`
+  - Request Body: `{ "status": "completed" }`
 
-## Learning Laravel
+- **Delete a payment**
+  - `DELETE /api/payments/{id}`
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- **Get all payments**
+  - `GET /api/payments`
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- **Get a specific payment by ID**
+  - `GET /api/payments/{id}`
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- **Get payments by email**
+  - `GET /api/payments/email/{email}`
 
-## Laravel Sponsors
+- **Get payments by status**
+  - `GET /api/payments/status/{status}`
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Refund Routes
 
-### Premium Partners
+- **Create a new refund for a payment**
+  - `POST /api/payments/{id}/refund`
+  - Request Body: `{ "amount": 50.00, "reason": "Product returned", "status": "pending" }`
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+- **Update an existing refund**
+  - `PUT /api/refunds/{id}`
+  - Request Body: `{ "status": "completed" }`
 
-## Contributing
+- **Delete a refund**
+  - `DELETE /api/refunds/{id}`
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Gateway Routes
 
-## Code of Conduct
+- **Get all gateways**
+  - `GET /api/gateways`
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+- **Get a specific gateway by ID**
+  - `GET /api/gateways/{id}`
 
-## Security Vulnerabilities
+- **Create a new gateway**
+  - `POST /api/gateways`
+  - Request Body: `{ "gateway": "Stripe", "api_key": "sk_test_4eC39HqLyjWDarjtT1zdp7dc", "secret_key": "whsec_xxx", "other_configuration": "..." }`
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- **Update an existing gateway**
+  - `PUT /api/gateways/{id}`
+  - Request Body: `{ "api_key": "new_api_key" }`
 
-## License
+- **Delete a gateway**
+  - `DELETE /api/gateways/{id}`
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Model Structure
+
+### Payment Model
+
+- **Fields:**
+  - `id`: Primary key
+  - `email`: Email of the payer
+  - `amount`: Payment amount
+  - `currency`: Currency code (e.g., USD)
+  - `status`: Payment status (pending, completed, failed)
+  - `gateway`: Payment gateway used (e.g., Stripe, PayPal)
+  - `transaction_id`: Unique transaction ID from the payment gateway
+  - `created_at`: Timestamp when the payment was created
+  - `updated_at`: Timestamp when the payment was last updated
+
+### Refund Model
+
+- **Fields:**
+  - `id`: Primary key
+  - `payment_id`: Foreign key referencing the payment
+  - `amount`: Refund amount
+  - `reason`: Reason for the refund
+  - `status`: Refund status (pending, completed, failed)
+  - `created_at`: Timestamp when the refund was created
+  - `updated_at`: Timestamp when the refund was last updated
+
+### Gateway Model
+
+- **Fields:**
+  - `id`: Primary key
+  - `gateway`: Name of the payment gateway (e.g., Stripe, PayPal)
+  - `api_key`: API key for the gateway
+  - `secret_key`: Secret key for the gateway
+  - `other_configuration`: Additional configuration for the gateway
+  - `created_at`: Timestamp when the gateway was created
+  - `updated_at`: Timestamp when the gateway was last updated
+
+## Examples of API Requests
+
+### Create a Payment
+
+```bash
+curl -X POST http://localhost:8000/api/payments \
+-H "Content-Type: application/json" \
+-d '{
+  "email": "user@example.com",
+  "amount": 100.00,
+  "currency": "USD",
+  "status": "pending",
+  "gateway": "Stripe",
+  "transaction_id": "txn_12345"
+}'
+```
+
+### Update a Payment
+
+```bash
+curl -X PUT http://localhost:8000/api/payments/1 \
+-H "Content-Type: application/json" \
+-d '{
+  "status": "completed"
+}'
+```
+
+### Get Payments by Email
+
+```bash
+curl http://localhost:8000/api/payments/email/user@example.com
+```
+
+### Create a Refund
+
+```bash
+curl -X POST http://localhost:8000/api/payments/1/refund \
+-H "Content-Type: application/json" \
+-d '{
+  "amount": 50.00,
+  "reason": "Product returned",
+  "status": "pending"
+}'
+```
+
+### Create a Gateway
+
+```bash
+curl -X POST http://localhost:8000/api/gateways \
+-H "Content-Type: application/json" \
+-d '{
+  "gateway": "Stripe",
+  "api_key": "sk_test_4eC39HqLyjWDarjtT1zdp7dc",
+  "secret_key": "whsec_xxx",
+  "other_configuration": "..."
+}'
+```
+
+## Other Important Information
+
+- **Database Migrations:** The database migrations for creating the `payments`, `refunds`, and `gateways` tables are located in the `database/migrations` directory.
+- **Controllers:** The business logic for handling API requests is implemented in the `PaymentController`, `RefundController`, and `GatewayController` located in the `app/Http/Controllers` directory.
+- **Models:** The Eloquent models representing the `Payment`, `Refund`, and `Gateway` entities are located in the `app/Models` directory.
